@@ -1,5 +1,5 @@
 import streamlit as st
-
+option = st.selectbox("Choose the App", ("Image Match", "Image Search by Text"))
 from matplotlib import offsetbox
 import numpy as np
 from tqdm import tqdm
@@ -228,3 +228,28 @@ def Image_Search_by_Text():
         results = search.get_dict()
         images_results = results.get("images_results", [])
         return images_results
+    # Main logic
+    if user_query:
+        # Use GPT-3 to generate explanation and answer
+        explanation_and_answer = generate_explanation_and_answer(user_query)
+
+        st.subheader("Explanation and Answer:")
+        st.write(explanation_and_answer)
+
+        # Image search using SerpApi
+        similar_images = search_similar_images(user_query)
+        print(similar_images)
+        if similar_images:
+            st.subheader("Similar Images:")
+            for i, image_data in enumerate(similar_images[:5]):  # Limit to the first 5 images
+                image_url = image_data["original"]
+                st.image(image_url, caption=f"Image {i + 1}", use_column_width=True)
+        else:
+            st.warning("No similar images found.")
+    pass
+
+# Run the selected app based on the user's choice
+if option == "Image Match":
+    Image_Match()
+elif option == "Image Search by Text":
+    Image_Search_by_Text()
