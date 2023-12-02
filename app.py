@@ -130,3 +130,31 @@ def Image_Match():
                     in zip(self.style_layers, style_outputs)}
 
             return {'content':content_dict, 'style':style_dict}
+
+
+    def load_vgg19_model():
+        vgg = tf.keras.applications.VGG19(include_top=False, weights=None)
+        vgg.load_weights('vgg19_weights.h5')
+        return vgg
+
+    # Load the VGG19 model
+    vgg = load_vgg19_model()
+
+
+    def image_to_style(image_tensor):
+        extractor = StyleModel(style_layers, content_layers)
+        return extractor(image_tensor)['style']
+
+    def style_to_vec(style):
+        # concatenate gram matrics in a flat vector
+        return np.hstack([np.ravel(s) for s in style.values()]) 
+
+    #
+    # Print shapes of the style layers and embeddings
+    #
+    image_tensor = load_image(image_paths[0])
+    style_tensors = image_to_style(image_tensor)
+    for k,v in style_tensors.items():
+        print(f'Style tensor {k}: {v.shape}')
+    style_embedding = style_to_vec( style_tensors )
+    print(f'Style embedding: {style_embedding.shape}')
