@@ -66,15 +66,9 @@ def Image_Match():
         img = img[tf.newaxis, :] # shape -> (batch_size, h, w, d)
         return img
 
-    #
-    # content layers describe the image subject
-    #
+
     content_layers = ['block5_conv2'] 
 
-    #
-    # style layers describe the image style
-    # we exclude the upper level layes to focus on small-size style details
-    #
     style_layers = [ 
             'block1_conv1',
             'block2_conv1',
@@ -248,7 +242,6 @@ def Image_Search_by_Text():
             st.warning("No similar images found.")
     pass
 
-# Run the selected app based on the user's choice
 if option == "Image Match":
     Image_Match()
 elif option == "Image Search by Text":
