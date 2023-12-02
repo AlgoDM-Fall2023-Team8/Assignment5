@@ -166,3 +166,28 @@ def Image_Match():
         print(type(image_tensor))
         style = style_to_vec(image_to_style(image_tensor) )
         image_style_embeddings[ntpath.basename(image_path)] = style
+    import streamlit as st
+
+
+    def search_similar_images(user_uploaded_image, image_style_embeddings, images, max_results=10):
+        user_image_tensor = load_image(user_uploaded_image)
+        user_style = style_to_vec(image_to_style(user_image_tensor))
+
+        distances = {}
+        for image_path, style_embedding in image_style_embeddings.items():
+            d = sc.spatial.distance.cosine(user_style, style_embedding)
+            distances[image_path] = d
+
+        sorted_neighbors = sorted(distances.items(), key=lambda x: x[1])
+
+        st.write("Most similar images:")
+        for i, (image_path, distance) in enumerate(sorted_neighbors[:max_results]):
+            st.image(images[image_path], caption=f"Distance: {distance}", use_column_width=True)
+    # Streamlit UI
+    
+    st.write("Upload your image:")
+    user_image = st.file_uploader("", type=["jpg", "jpeg", "png"])
+    if user_image:
+        search_similar_images(user_image, image_style_embeddings, images)
+    pass
+
