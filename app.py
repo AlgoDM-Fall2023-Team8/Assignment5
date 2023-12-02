@@ -157,4 +157,4 @@ def Image_Match():
     for k,v in style_tensors.items():
         print(f'Style tensor {k}: {v.shape}')
     style_embedding = style_to_vec( style_tensors )
-    print(f'Style embedding: {style_embedding.shape}')
+    print(f'Style embedding: {style_embedding.shape}'
