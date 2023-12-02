@@ -191,3 +191,40 @@ def Image_Match():
         search_similar_images(user_image, image_style_embeddings, images)
     pass
 
+def Image_Search_by_Text():
+    import streamlit as st
+    from serpapi import GoogleSearch
+    import openai
+
+    # Set up OpenAI API key
+    openai.api_key = "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"  # Replace with your actual OpenAI API key
+
+    # Streamlit app
+    st.title("Query Exploration App")
+
+    # User input for query
+    user_query = st.text_input("Enter your query:")
+
+    # Function to generate explanation and answer using GPT-3
+    def generate_explanation_and_answer(query):
+        prompt = f"Explain and answer the following question:\n{query}"
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=prompt,
+            max_tokens=150
+        )
+        explanation_and_answer = response['choices'][0]['text']
+        return explanation_and_answer
+
+    # Function to search for similar images using SerpApi
+    def search_similar_images(query):
+          # Replace with your actual SerpApi key
+        params = {
+            "q": query,
+            "engine": "google_images",
+            "api_key": '7437fb39559a83645ceaf9ff2fff9ef76152df6ee7cbe038f5fb9708fa43273b'
+        }
+        search = GoogleSearch(params)
+        results = search.get_dict()
+        images_results = results.get("images_results", [])
+        return images_results
