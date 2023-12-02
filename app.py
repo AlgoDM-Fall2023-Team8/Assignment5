@@ -158,3 +158,11 @@ def Image_Match():
         print(f'Style tensor {k}: {v.shape}')
     style_embedding = style_to_vec( style_tensors )
     print(f'Style embedding: {style_embedding.shape}')
+
+    image_style_embeddings = {}
+    for image_path in tqdm(image_paths): 
+        image_tensor = load_image(image_path)
+        print(image_tensor)
+        print(type(image_tensor))
+        style = style_to_vec(image_to_style(image_tensor) )
+        image_style_embeddings[ntpath.basename(image_path)] = style
